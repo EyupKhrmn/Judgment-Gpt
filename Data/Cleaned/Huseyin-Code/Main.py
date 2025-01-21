@@ -8,7 +8,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
 from langchain.docstore.document import Document
 
-# URL'yi başta tanımla
 url = "https://www.kikkararlari.com/"
 
 OPENAI_API_KEY="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"
