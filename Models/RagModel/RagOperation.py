@@ -9,19 +9,15 @@ import asyncio
 
 from ScrapingOperations import Scraping
 
-# Load environment variables
 load_dotenv()
 
-# OpenAI API and user agent definition
 os.environ["USER_AGENT"] = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 )
 llm = ChatOpenAI(model="gpt-4")
 
-# Load DataFrame
 data = Scraping.output
 
-# Split DataFrame into chunks
 def chunk_data(data, chunk_size):
     for i in range(0, len(data), chunk_size):
         yield data.iloc[i:i + chunk_size]
@@ -29,7 +25,6 @@ def chunk_data(data, chunk_size):
 chunk_size = 2
 chunks = list(chunk_data(data, chunk_size))
 
-# Create vector store
 vectorizer = TfidfVectorizer()
 tfidf_matrix = vectorizer.fit_transform(data['Question'])
 
@@ -39,7 +34,6 @@ def retrieve_relevant_docs(query, tfidf_matrix, data):
     relevant_doc_index = cosine_similarities.argmax()
     return data.iloc[relevant_doc_index]['Answer']
 
-# GPT-2 model and tokenizer
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 
@@ -62,7 +56,6 @@ async def rag_model(query):
     answer = await generate_answer(query, context)
     return answer
 
-# User query loop
 while True:
     query = input("Please enter your question (type 'exit' to quit): ")
     if query.lower() == 'exit':
